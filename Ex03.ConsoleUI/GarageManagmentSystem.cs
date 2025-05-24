@@ -17,7 +17,13 @@ namespace Ex03.ConsoleUI
         public void ChooseOptionFromMenu()
         {
             int choice = Menu.ShowMainMenu();
-            HandleUserChoice(choice);
+            while(choice != 9)
+            {
+                HandleUserChoice(choice);
+                choice = Menu.ShowMainMenu();
+
+            }
+            Console.WriteLine("Exiting the Garage Management System. Goodbye!");
         }
 
         private void HandleUserChoice(int i_Choice)
@@ -26,10 +32,28 @@ namespace Ex03.ConsoleUI
             switch (i_Choice)
             {
                 case 1:
-                    addAllVehicles(); // done 
+                    addAllVehicles();
+                    Console.WriteLine($"All vehicles have been loaded successfully.");
+                    
                     break;
                 case 2:
-                    addNewVehicleFromUser(); // done 
+                    try
+                    {
+                        addNewVehicleFromUser();
+                        Console.WriteLine("Vehicle has been added successfully.");
+                    }
+                    catch(ArgumentException ae)
+                    {
+                        Console.WriteLine($"Error: {ae.Message}"); //EDIT
+                    }
+                    catch (FormatException fe)
+                    {
+                        Console.WriteLine("Invalid input format. Please try again.");
+                    }
+                    catch (ValueRangeException vre)
+                    {
+                        Console.WriteLine($": {vre.Message}"); //EDIT
+                    }
                     break;
                 case 3:
                     showAllChosenVehiclesLicensePlates();
@@ -44,10 +68,11 @@ namespace Ex03.ConsoleUI
                     try
                     {
                         m_Garage.ChangeVehicleStatus(licensePlate, status);
+                        Console.WriteLine($"Vehicle with license plate {licensePlate} has been changed to {status} status successfully.");
                     }
-                    catch
+                    catch(ArgumentException ae)
                     {
-
+                        Console.WriteLine($"Error: {ae.Message}"); //EDIT
                     }
                     break;
                 case 5:
@@ -56,10 +81,11 @@ namespace Ex03.ConsoleUI
                     try
                     {
                         m_Garage.InflateTires(licensePlate);
+                        Console.WriteLine($"Tires of vehicle with license plate {licensePlate} have been inflated successfully.");
                     }
-                    catch
+                    catch(ArgumentException ae)
                     {
-
+                        Console.WriteLine($"Error: {ae.Message}"); //EDIT
                     }
                     break;
                 case 6:
@@ -75,10 +101,11 @@ namespace Ex03.ConsoleUI
                     try
                     {
                         m_Garage.RefuelVehicle(licensePlate, fuelType, fuelAmount);
+                        Console.WriteLine($"Vehicle with license plate {licensePlate} has been refueled successfully.");
                     }
-                    catch
+                    catch(ArgumentException ae)
                     {
-
+                        Console.WriteLine($"Error: {ae.Message}"); //EDIT
                     }
                     break;
                 case 7:
@@ -91,10 +118,11 @@ namespace Ex03.ConsoleUI
                     try
                     {
                         m_Garage.RechargeVehicle(licensePlate, minutesAmount);
+                        Console.WriteLine($"Vehicle with license plate {licensePlate} has been recharged successfully.");
                     }
-                    catch
+                    catch(ArgumentException ae)
                     {
-
+                        Console.WriteLine($"Error: {ae.Message}"); //EDIT
                     }
                     break;
                 case 8:
@@ -105,9 +133,9 @@ namespace Ex03.ConsoleUI
                     {
                         m_Garage.ShowAllDetailsOfSpecificVehicle(licensePlate);
                     }
-                    catch
+                    catch(ArgumentException ae)
                     {
-
+                        Console.WriteLine($"Error: {ae.Message}"); //EDIT
                     }
                     break;
             }

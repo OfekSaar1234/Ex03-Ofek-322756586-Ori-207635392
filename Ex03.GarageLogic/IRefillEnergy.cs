@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+//using System.Threading.Tasks;
 
-namespace Ex03.GarageLogic
-{
-    public interface IRefillEnergy
-    {
-        void RefillEnergyLevel(float i_EnergyAmount);
-    }
-}
+//namespace Ex03.GarageLogic
+//{
+//    public interface IRefillEnergy
+//    {
+//        void RefillEnergyLevel(float i_EnergyAmount);
+//    }
+//}

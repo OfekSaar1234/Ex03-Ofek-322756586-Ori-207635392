@@ -13,6 +13,7 @@ namespace Ex03.ConsoleUI
         {
             GarageManagmentSystem garageManagmentSystem = new GarageManagmentSystem();
             garageManagmentSystem.ChooseOptionFromMenu();
+            Console.ReadLine();
         }
     }
 }
@@ -31,6 +32,7 @@ namespace Ex03.ConsoleUI
 // check where to put exceptions in general (when to use bool and when to throw exception)
 // check validations in all places
 // make word polymoprphism tree (inheritance / composition etc)
+// Magic numbers - check if we can use const or readonly (minute, hour, etc.)
 
 
 // exceptions we need to use (Format, Argument, ValueRange)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Ex03.GarageLogic.FuelEngine;
 
 namespace Ex03.GarageLogic
 {
@@ -14,16 +15,18 @@ namespace Ex03.GarageLogic
         {
             MaxBatteryHours = i_MaxBatteryHours;
         }
+
         public void Recharge(Vehicle vehicle, float i_ChargingHours)
         {
+
             if (i_ChargingHours < 0)
             {
-                throw new ValueRangeException("Charging hours must be positive");
+                throw new ValueRangeException("Charging hours must be positive", 0, MaxBatteryHours);
             }
 
             if (RemainingBatteryHours + i_ChargingHours > MaxBatteryHours)
             {
-                throw new ValueRangeException("Charging hours exceed max battery hours");
+                throw new ValueRangeException("Charging hours exceed max battery hours", 0, MaxBatteryHours);
             }
 
             RemainingBatteryHours += i_ChargingHours;

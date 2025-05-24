@@ -7,7 +7,7 @@ using static Ex03.GarageLogic.FuelEngine;
 
 namespace Ex03.GarageLogic
 {
-    public class FuelCar : Car, IRefillEnergy
+    public class FuelCar : Car
     {
         private const float k_MaxFuelAmount = 48f;
 
@@ -19,9 +19,28 @@ namespace Ex03.GarageLogic
 
         public FuelCar(string i_LicenseID, string i_ModelName) : base(i_ModelName, i_LicenseID){}
 
-        public void RefillEnergyLevel(float i_EnergyAmount)
+        public override float CalculateExactEnergyAmount(float i_EnergyPrecentage)
         {
+            float exactEnergyAmount = (i_EnergyPrecentage / 100) * k_MaxFuelAmount;
+            return exactEnergyAmount;
+        }
+        public override void RefillEnergy(float i_EnergyAmount)
+        {
+
             m_Engine.Refuel(this, i_EnergyAmount, eFuelType.Octan95);
+        }
+        public override bool Fuelable(eFuelType i_fuelType)
+        {
+            if (m_Engine.FuelType != i_fuelType)
+            {
+                throw new ArgumentException("Invalid fuel type");
+            }
+
+            return true;
+        }
+        public override bool Chargeable()
+        {
+            return false;
         }
     }
 }

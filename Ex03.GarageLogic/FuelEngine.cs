@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    public sealed class FuelEngine
+    public sealed class FuelEngine 
     {
         public eFuelType FuelType { get; set; }
         public float FuelAmount { get; set; }
@@ -30,17 +30,17 @@ namespace Ex03.GarageLogic
         {
             if (i_FuelType != FuelType)
             {
-                throw new ArgumentException("Fuel amount to add cannot be negative");
+                throw new ArgumentException($"Invalid fuel type. Expected: {FuelType}, Provided: {i_FuelType}");
             }
 
             if (i_FuelAmount < 0)
             {
-                throw new ValueRangeException("Fuel amount to add cannot be negative");
+                throw new ValueRangeException("Fuel amount to add cannot be negative", 0, MaxFuelAmount );
             }
 
             if (FuelAmount + i_FuelAmount > MaxFuelAmount)
             {
-                throw new ValueRangeException("Fuel amount exceeds maximum capacity");
+                throw new ValueRangeException("Fuel amount exceeds maximum capacity", 0, MaxFuelAmount);
             }
 
             FuelAmount += i_FuelAmount;

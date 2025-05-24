@@ -20,6 +20,7 @@ namespace Ex03.ConsoleUI
             Console.WriteLine("6. Refuel Vehicle");
             Console.WriteLine("7. Recharge Vehicle");
             Console.WriteLine("8. Show All Details Of Specific Vehicle by License Plate");
+            Console.WriteLine("9. Exit");
 
             string choice = Console.ReadLine();
             int optionChoice;

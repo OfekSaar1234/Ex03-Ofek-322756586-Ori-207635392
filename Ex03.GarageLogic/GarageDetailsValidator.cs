@@ -154,9 +154,10 @@ namespace Ex03.GarageLogic
 
         public static void ValidateWheelsAirPreasure(Vehicle i_Vehicle, int i_AirPressure)
         {
-            if (i_AirPressure < 0 || i_AirPressure >i_Vehicle.Wheels[0].MaxAirPreasure)
+            float wheelMaxAirPressure = i_Vehicle.Wheels[0].MaxAirPreasure;
+            if (i_AirPressure < 0 || i_AirPressure > wheelMaxAirPressure)
             {
-                throw ValueRangeException();
+                throw new ValueRangeException("Invalid Air pressure amount", 0, wheelMaxAirPressure);
             }
         }
 

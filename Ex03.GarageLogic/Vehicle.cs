@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using static Ex03.GarageLogic.FuelEngine;
 
 namespace Ex03.GarageLogic
 {
@@ -50,5 +51,10 @@ namespace Ex03.GarageLogic
                 wheel.Inflate();
             }
         }
+        public abstract float CalculateExactEnergyAmount(float i_EnergyPrecentage);
+        public abstract void RefillEnergy(float i_EnergyPrecentage);
+        public abstract void PartsValidatorAndAssignment(string i_Detail1, string i_Detail2);
+        public abstract bool Fuelable(eFuelType i_fuelType);
+        public abstract bool Chargeable();
     }
 }

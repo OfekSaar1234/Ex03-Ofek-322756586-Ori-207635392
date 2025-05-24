@@ -23,18 +23,18 @@ namespace Ex03.GarageLogic
             return r_Vehicles.ContainsKey(i_LicenseID);
         }
 
-        
-
         public void AddNewVehicle(string[] i_VehicleDetail)
         {
             string vehicleType = i_VehicleDetail[0];
             string licensePlate = i_VehicleDetail[1];
             string modelName = i_VehicleDetail[2];
-            float energyVolume = float.Parse(i_VehicleDetail[3]);
+            float energyVolume = float.Parse(i_VehicleDetail[3]); // energy precentage
             string tireModel = i_VehicleDetail[4];
             int AirPressure = int.Parse(i_VehicleDetail[5]);
             string ownerName = i_VehicleDetail[6];
             string ownerPhone = i_VehicleDetail[7];
+            string extraDetail1 = i_VehicleDetail[8];
+            string extraDetail2 = i_VehicleDetail[9];
 
             GarageDetailsValidator.VehicleTypeValidator(vehicleType); // decide if exception or bool
             GarageDetailsValidator.LicensePlateNumberValidator(licensePlate); // decide if exception or bool
@@ -51,54 +51,9 @@ namespace Ex03.GarageLogic
                 wheel.CurrentAirPreasure = AirPressure;  //Exeption if the value is out of range!!!!!!!!!!!!!!!!!!!!!!!!!!
             }
 
-            if (vehicleType == "FuelCar" || vehicleType == "ElectricCar")
-            {
-                Car car = newVehicle as Car; // Safe casting ask ori // if the cast fails, car will be null
-                if (car != null)
-                {
-                    GarageDetailsValidator.CarPartsValidatorAndAssignment(car, i_VehicleDetail[8], i_VehicleDetail[9]);
-                }
-
-                if(vehicleType == "FuelCar")
-                {
-                    FuelCar fuelCar = newVehicle as FuelCar;
-                    fuelCar.RefillEnergyLevel(energyVolume);
-                }
-                else // Electric Car
-                {
-                    ElectricCar electricCar = newVehicle as ElectricCar;
-                    electricCar.RefillEnergyLevel(energyVolume);
-                }
-            }
-            else if (vehicleType == "FuelMotorcycle" || vehicleType == "ElectricMotorcycle")
-            {
-                Motorcycle motorcycle = newVehicle as Motorcycle; // Direct cast // throws exeption if the cast fails!!!!!!!!!!
-                if (motorcycle != null)
-                {
-                    GarageDetailsValidator.MotorcyclePartsValidatorAndAssignment(motorcycle, i_VehicleDetail[8], i_VehicleDetail[9]);
-                }
-
-                if (vehicleType == "FuelMotorcycle")
-                {
-                    FuelMotorcycle fuelMotorcycle = newVehicle as FuelMotorcycle;
-                    fuelMotorcycle.RefillEnergyLevel(energyVolume);
-                }
-                else // Electric Motorcycle
-                {
-                    ElectricMotorcycle electricMotorcycle = newVehicle as ElectricMotorcycle;
-                    electricMotorcycle.RefillEnergyLevel(energyVolume);
-                }
-            }
-            else if (vehicleType == "Truck")
-            {
-                Truck truck = newVehicle as Truck; 
-                if (truck != null)
-                {
-                    GarageDetailsValidator.TruckPartsValidatorAndAssignment(truck, i_VehicleDetail[8], i_VehicleDetail[9]);
-                }
-
-                truck.RefillEnergyLevel(energyVolume);
-            }
+            float energyPrecentage = newVehicle.CalculateExactEnergyAmount(energyVolume);//(recognise specific vehicle and calculate exact liters for engine or hours for battery)
+            newVehicle.RefillEnergy(energyPrecentage);
+            newVehicle.PartsValidatorAndAssignment(extraDetail1, extraDetail2);
 
             ImpoundedVehicle impoundedNewVehicleDetails = new ImpoundedVehicle(ownerName, ownerPhone, eVehicleStatus.InRepair, newVehicle); // Assuming you create an instance
 
@@ -137,7 +92,7 @@ namespace Ex03.GarageLogic
             }
             else
             {
-                new ArgumentException("No vehicles found with the selected license plate.");
+                throw new ArgumentException("No vehicles found with the selected license plate.");
             }
         }
 
@@ -151,11 +106,11 @@ namespace Ex03.GarageLogic
             }
             else
             {
-                new ArgumentException("No vehicles found with the selected license plate.");
+                throw new ArgumentException("No vehicles found with the selected license plate.");
             }
         }
 
-        public void RefuelVehicle(string i_LicensePlate, eFuelType i_FuelType, float i_FuelAmount)
+        public void RefuelVehicle(string i_LicensePlate, eFuelType i_FuelType, float i_FuelAmount) 
         {
             ImpoundedVehicle impoundedVehicle;
             FindLicensePlate(i_LicensePlate, out impoundedVehicle);
@@ -165,36 +120,13 @@ namespace Ex03.GarageLogic
             {
                 vehicle = impoundedVehicle.Vehicle;
 
-                if (vehicle is FuelCar)
+                if(vehicle.Fuelable(i_FuelType))
                 {
-                    if (i_FuelType != eFuelType.Octan95)
-                    {
-                        throw new ArgumentException("Oops you can't refuel with this type of fuel");
-                    }
-
-                    (vehicle as FuelCar).RefillEnergyLevel(i_FuelAmount);
-                }
-                else if (vehicle is FuelMotorcycle)
-                {
-                    if (i_FuelType != eFuelType.Octan98)
-                    {
-                        throw new ArgumentException("Oops you can't refuel with this type of fuel");
-                    }
-
-                    (vehicle as FuelMotorcycle).RefillEnergyLevel(i_FuelAmount);
-                }
-                else if (vehicle is Truck)
-                {
-                    if (i_FuelType != eFuelType.Soler)
-                    {
-                        throw new ArgumentException("Oops you can't refuel with this type of fuel");
-                    }
-
-                    (vehicle as Truck).RefillEnergyLevel(i_FuelAmount);
+                    vehicle.RefillEnergy(i_FuelAmount);
                 }
                 else
                 {
-                    throw new ArgumentException("This vehicle can't refuel");
+                    throw new ArgumentException("Inserted electric vehicle to refuel");
                 }
             }
             else
@@ -214,13 +146,13 @@ namespace Ex03.GarageLogic
                 float hoursToFill = i_MinutesAmount / 60;
                 vehicle = impoundedVehicle.Vehicle;
 
-                if (vehicle is ElectricCar)
+                if (vehicle.Chargeable())
                 {
-                    (vehicle as ElectricCar).RefillEnergyLevel(hoursToFill);
+                    vehicle.RefillEnergy(hoursToFill);
                 }
-                else if (vehicle is ElectricMotorcycle)
+                else
                 {
-                    (vehicle as ElectricMotorcycle).RefillEnergyLevel(hoursToFill);
+                    throw new ArgumentException("Inserted fuel vehicle to recharge");
                 }
             }
             else
